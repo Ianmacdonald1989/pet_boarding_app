@@ -8,7 +8,9 @@ class DashboardController < ApplicationController
       .includes(:customer, :pets)
       .order(:start_date)
 
-    @bookings_usage_by_cage = @current_bookings.group(:cage_size).count
+    # `@current_bookings` is ordered for display, but Postgres does not allow
+    # ordering by non-grouped columns in a grouped aggregate query.
+    @bookings_usage_by_cage = @current_bookings.reorder(nil).group(:cage_size).count
 
     # Total configured inventory for each cage size.
     @cage_inventory_by_size = Cage.all.index_by(&:size)

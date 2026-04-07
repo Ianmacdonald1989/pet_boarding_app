@@ -1,37 +1,56 @@
-<p id="notice"><%= notice %></p>
+<% content_for :title, "Bookings — Pet Boarding" %>
 
-<h1>Bookings</h1>
+<header class="page-header">
+  <h1>All bookings</h1>
+  <p class="page-header__meta">Every reservation, newest first.</p>
+</header>
 
-<table>
-  <thead>
-    <tr>
-      <th>Customer</th>
-      <th>Start date</th>
-      <th>End date</th>
-      <th>Required cage</th>
-      <th>Pet(s)</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @bookings.each do |booking| %>
-      <tr>
-        <td><%= booking.customer&.full_name || booking.customer_id %></td>
-        <td><%= booking.start_date %></td>
-        <td><%= booking.end_date %></td>
-        <td><%= booking.cage_size %></td>
-        <td>
-          <%= booking.pets.map { |p| "#{p.quantity}x #{p.pet_type}#{p.pet_size.present? ? ' (' + p.pet_size.to_s + ')' : ''}" }.join(", ") %>
-        </td>
-        <td><%= link_to 'Show', booking %></td>
-        <td><%= link_to 'Edit', edit_booking_path(booking) %></td>
-        <td><%= link_to 'Destroy', booking, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+<section class="card">
+  <div class="card__header">
+    <h2 class="card__title">List</h2>
+    <%= link_to "New booking", new_booking_path, class: "btn btn--primary" %>
+  </div>
+  <div class="card__body">
+    <% if @bookings.any? %>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Customer</th>
+              <th scope="col">Start</th>
+              <th scope="col">End</th>
+              <th scope="col">Cage</th>
+              <th scope="col">Pets</th>
+              <th scope="col" class="actions-cell">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @bookings.each do |booking| %>
+              <tr>
+                <td><%= booking.customer&.full_name || "Customer ##{booking.customer_id}" %></td>
+                <td><%= l booking.start_date %></td>
+                <td><%= l booking.end_date %></td>
+                <td><span class="<%= cage_badge_class(booking.cage_size) %>"><%= booking.cage_size %></span></td>
+                <td><%= pets_summary(booking) %></td>
+                <td class="actions-cell">
+                  <%= link_to "View", booking, class: "btn btn--ghost" %>
+                  <%= link_to "Edit", edit_booking_path(booking), class: "btn btn--ghost" %>
+                  <%= link_to "Delete", booking, method: :delete, data: { confirm: "Delete this booking?" }, class: "btn btn--danger" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <p>No bookings yet. Create the first one to get started.</p>
+        <%= link_to "New booking", new_booking_path, class: "btn btn--primary" %>
+      </div>
     <% end %>
-  </tbody>
-</table>
+  </div>
+</section>
 
-<br>
-
-<%= link_to 'New Booking', new_booking_path %>
+<div class="btn-row">
+  <%= link_to "← Dashboard", root_path, class: "btn btn--secondary" %>
+</div>

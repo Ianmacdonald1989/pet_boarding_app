@@ -1,5 +1,8 @@
 require_relative "boot"
 
+require "logger"
+require "active_support/logger"
+
 require "rails/all"
 
 # Require the gems listed in Gemfile, including any gems

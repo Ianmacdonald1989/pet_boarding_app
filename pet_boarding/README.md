@@ -1,24 +1,15 @@
-# README
+# Pet Boarding — Rails app
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This directory is the **Rails application**. Setup and documentation for the whole project live in the **[repository root README](../README.md)**.
 
-Things you may want to cover:
+## Quick commands
 
-* Ruby version
+```bash
+# From this directory (pet_boarding/)
+bin/setup                    # gems, yarn, db:prepare
+bundle exec rails server     # http://localhost:3000
+bundle exec rails test
+bundle exec rails webpacker:compile   # if JS packs are missing
+```
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+The app root route is the **dashboard**; bookings are under `/bookings`.

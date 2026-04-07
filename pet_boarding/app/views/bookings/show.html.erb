@@ -1,29 +1,35 @@
-<p id="notice"><%= notice %></p>
+<% content_for :title, "Booking ##{@booking.id} — Pet Boarding" %>
 
-<p>
-  <strong>Customer:</strong>
-  <%= @booking.customer&.full_name || @booking.customer_id %>
-</p>
+<header class="page-header">
+  <h1>Booking details</h1>
+  <p class="page-header__meta">Customer stay and pet summary.</p>
+</header>
 
-<p>
-  <strong>Start date:</strong>
-  <%= @booking.start_date %>
-</p>
+<section class="card">
+  <div class="card__body card__body--padded">
+    <ul class="detail-list">
+      <li>
+        <span class="detail-label">Customer</span>
+        <span class="detail-value"><%= @booking.customer&.full_name || "Customer ##{@booking.customer_id}" %></span>
+      </li>
+      <li>
+        <span class="detail-label">Stay</span>
+        <span class="detail-value"><%= l @booking.start_date %> — <%= l @booking.end_date %></span>
+      </li>
+      <li>
+        <span class="detail-label">Required cage</span>
+        <span class="detail-value"><span class="<%= cage_badge_class(@booking.cage_size) %>"><%= @booking.cage_size %></span></span>
+      </li>
+      <li>
+        <span class="detail-label">Pets</span>
+        <span class="detail-value"><%= pets_summary(@booking) %></span>
+      </li>
+    </ul>
+  </div>
+</section>
 
-<p>
-  <strong>End date:</strong>
-  <%= @booking.end_date %>
-</p>
-
-<p>
-  <strong>Required cage:</strong>
-  <%= @booking.cage_size %>
-</p>
-
-<p>
-  <strong>Pet(s):</strong>
-  <%= @booking.pets.map { |p| "#{p.quantity}x #{p.pet_type}#{p.pet_size.present? ? ' (' + p.pet_size.to_s + ')' : ''}" }.join(", ") %>
-</p>
-
-<%= link_to 'Edit', edit_booking_path(@booking) %> |
-<%= link_to 'Back', bookings_path %>
+<div class="btn-row">
+  <%= link_to "Edit booking", edit_booking_path(@booking), class: "btn btn--primary" %>
+  <%= link_to "All bookings", bookings_path, class: "btn btn--secondary" %>
+  <%= link_to "Dashboard", root_path, class: "btn btn--ghost" %>
+</div>

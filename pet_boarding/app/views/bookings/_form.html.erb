@@ -1,8 +1,7 @@
-<%= form_with(model: booking) do |form| %>
+<%= form_with(model: booking, class: "booking-form") do |form| %>
   <% if booking.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(booking.errors.count, "error") %> prohibited this booking from being saved:</h2>
-
+      <h2><%= pluralize(booking.errors.count, "issue") %> to fix before saving</h2>
       <ul>
         <% booking.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,48 +10,51 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :customer_id, "Customer" %>
-    <%= form.collection_select :customer_id, @customers, :id, :full_name, prompt: "Select a customer" %>
+  <h3 class="form-section-title">Booking</h3>
+
+  <div class="form-group">
+    <%= form.label :customer_id, "Customer", class: "form-label" %>
+    <%= form.collection_select :customer_id, @customers, :id, :full_name, { prompt: "Select a customer" }, { class: "form-input" } %>
   </div>
 
-  <div class="field">
-    <%= form.label :start_date %>
-    <%= form.date_select :start_date %>
+  <div class="form-group">
+    <%= form.label :start_date, class: "form-label" %>
+    <%= form.date_field :start_date, class: "form-input" %>
   </div>
 
-  <div class="field">
-    <%= form.label :end_date %>
-    <%= form.date_select :end_date %>
+  <div class="form-group">
+    <%= form.label :end_date, class: "form-label" %>
+    <%= form.date_field :end_date, class: "form-input" %>
   </div>
 
-  <div class="field">
-    <%= form.label :cage_size, "Required cage size (auto-calculated)" %>
-    <%= form.text_field :cage_size, value: booking.cage_size, disabled: true %>
-    <p style="margin: 0.25rem 0 0;">This is calculated from the pet details you enter below.</p>
+  <div class="form-group">
+    <%= form.label :cage_size, "Required cage size", class: "form-label" %>
+    <%= form.text_field :cage_size, value: booking.cage_size, disabled: true, class: "form-input" %>
+    <p class="form-hint">Computed from the pets below (guinea pig, dog, cat, hamster rules).</p>
   </div>
 
-  <h3>Pet details</h3>
-  <div class="fields">
-    <%= form.fields_for :pets do |pet_fields| %>
-      <div class="field">
-        <%= pet_fields.label :pet_type, "Pet type" %>
-        <%= pet_fields.text_field :pet_type, placeholder: "guinea pig, dog, cat, hamster" %>
+  <h3 class="form-section-title">Pets on this stay</h3>
+
+  <%= form.fields_for :pets do |pet_fields| %>
+    <div class="pet-card">
+      <div class="pet-card__inner">
+        <div class="form-group">
+          <%= pet_fields.label :pet_type, "Pet type", class: "form-label" %>
+          <%= pet_fields.text_field :pet_type, placeholder: "e.g. guinea pig, dog, cat, hamster", class: "form-input" %>
+        </div>
+        <div class="form-group">
+          <%= pet_fields.label :pet_size, "Size (for dogs)", class: "form-label" %>
+          <%= pet_fields.text_field :pet_size, placeholder: "e.g. large", class: "form-input" %>
+        </div>
+        <div class="form-group">
+          <%= pet_fields.label :quantity, class: "form-label" %>
+          <%= pet_fields.number_field :quantity, min: 1, class: "form-input" %>
+        </div>
       </div>
+    </div>
+  <% end %>
 
-      <div class="field">
-        <%= pet_fields.label :pet_size, "Pet size (needed for dogs)" %>
-        <%= pet_fields.text_field :pet_size, placeholder: "large" %>
-      </div>
-
-      <div class="field">
-        <%= pet_fields.label :quantity, "Quantity" %>
-        <%= pet_fields.number_field :quantity, min: 1 %>
-      </div>
-    <% end %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
+  <div class="form-actions">
+    <%= form.submit booking.persisted? ? "Save changes" : "Create booking", class: nil %>
   </div>
 <% end %>

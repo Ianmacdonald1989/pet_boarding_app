@@ -1,6 +1,17 @@
-<h1>Editing Booking</h1>
+<% content_for :title, "Edit booking — Pet Boarding" %>
 
-<%= render 'form', booking: @booking %>
+<header class="page-header">
+  <h1>Edit booking</h1>
+  <p class="page-header__meta">Update dates or pets; required cage size is recalculated when you save.</p>
+</header>
 
-<%= link_to 'Show', @booking %> |
-<%= link_to 'Back', bookings_path %>
+<section class="card form-card">
+  <div class="card__body card__body--padded">
+    <%= render "form", booking: @booking %>
+  </div>
+</section>
+
+<div class="btn-row">
+  <%= link_to "View this booking", @booking, class: "btn btn--secondary" %>
+  <%= link_to "All bookings", bookings_path, class: "btn btn--ghost" %>
+</div>

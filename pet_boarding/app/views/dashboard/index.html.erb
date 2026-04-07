@@ -1,59 +1,100 @@
-<h1>Pet Boarding Dashboard</h1>
-<p>
-  Today: <strong><%= @today %></strong>
-</p>
+<% content_for :title, "Dashboard — Pet Boarding" %>
 
-<h2>Cage usage</h2>
+<header class="page-header">
+  <h1>Dashboard</h1>
+  <p class="page-header__meta">
+    Today is <strong><%= l @today, format: :long %></strong> — cages in use for stays overlapping today.
+  </p>
+</header>
 
-<table>
-  <thead>
-    <tr>
-      <th>Size</th>
-      <th>Total cages</th>
-      <th>Bookings today</th>
-      <th>Available</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @cage_usage_rows.each do |row| %>
-      <tr>
-        <td><%= row[:size] %></td>
-        <td><%= row[:total] %></td>
-        <td><%= row[:booked] %></td>
-        <td><%= row[:available] %></td>
-      </tr>
+<section class="card" aria-labelledby="cage-usage-heading">
+  <div class="card__header">
+    <h2 class="card__title" id="cage-usage-heading">Cage availability</h2>
+  </div>
+  <div class="card__body">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th scope="col">Size</th>
+            <th scope="col">Total</th>
+            <th scope="col">Booked today</th>
+            <th scope="col">Available</th>
+            <th scope="col">Load</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @cage_usage_rows.each do |row| %>
+            <% total = row[:total].to_i %>
+            <% booked = row[:booked].to_i %>
+            <% pct = total.positive? ? [(booked.to_f / total * 100).round, 100].min : 0 %>
+            <% fill_class = pct >= 100 ? "is-full" : (pct >= 80 ? "is-high" : "") %>
+            <tr>
+              <td><span class="<%= cage_badge_class(row[:size]) %>"><%= row[:size] %></span></td>
+              <td><%= row[:total] %></td>
+              <td><%= row[:booked] %></td>
+              <td><strong><%= row[:available] %></strong></td>
+              <td>
+                <% if total.positive? %>
+                  <div class="usage-bar" title="<%= pct %>% of capacity in use">
+                    <div class="usage-bar__fill <%= fill_class %>" style="<%= "width: #{pct}%" %>"></div>
+                  </div>
+                <% else %>
+                  <span class="page-header__meta">—</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="card" aria-labelledby="current-bookings-heading">
+  <div class="card__header">
+    <h2 class="card__title" id="current-bookings-heading">Current bookings</h2>
+    <%= link_to "New booking", new_booking_path, class: "btn btn--primary" %>
+  </div>
+  <div class="card__body">
+    <% if @current_bookings.any? %>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Customer</th>
+              <th scope="col">Stay</th>
+              <th scope="col">Cage</th>
+              <th scope="col">Pets</th>
+              <th scope="col" class="actions-cell">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @current_bookings.each do |booking| %>
+              <tr>
+                <td><%= booking.customer&.full_name || "Customer ##{booking.customer_id}" %></td>
+                <td>
+                  <%= l booking.start_date %> → <%= l booking.end_date %>
+                </td>
+                <td><span class="<%= cage_badge_class(booking.cage_size) %>"><%= booking.cage_size %></span></td>
+                <td><%= pets_summary(booking) %></td>
+                <td class="actions-cell">
+                  <%= link_to "View", booking, class: "btn btn--ghost" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <p>No bookings overlap today. Add a booking or pick different dates.</p>
+        <%= link_to "Create a booking", new_booking_path, class: "btn btn--primary" %>
+      </div>
     <% end %>
-  </tbody>
-</table>
+  </div>
+</section>
 
-<h2>Current bookings</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>Customer</th>
-      <th>Dates</th>
-      <th>Required cage</th>
-      <th>Pet(s)</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @current_bookings.each do |booking| %>
-      <tr>
-        <td><%= booking.customer&.full_name || booking.customer_id %></td>
-        <td><%= booking.start_date %> to <%= booking.end_date %></td>
-        <td><%= booking.cage_size %></td>
-        <td>
-          <%= booking.pets.map { |p| "#{p.quantity}x #{p.pet_type}#{p.pet_size.present? ? ' (' + p.pet_size.to_s + ')' : ''}" }.join(", ") %>
-        </td>
-        <td><%= link_to "Show", booking %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<p>
-  <%= link_to "Create a booking", new_booking_path %>
-</p>
-
+<div class="btn-row">
+  <%= link_to "View all bookings", bookings_path, class: "btn btn--secondary" %>
+</div>

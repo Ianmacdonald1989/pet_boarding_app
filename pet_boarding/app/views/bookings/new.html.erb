@@ -1,5 +1,16 @@
-<h1>New Booking</h1>
+<% content_for :title, "New booking — Pet Boarding" %>
 
-<%= render 'form', booking: @booking %>
+<header class="page-header">
+  <h1>New booking</h1>
+  <p class="page-header__meta">Choose customer, dates, and pets. Cage size updates automatically from pet rules.</p>
+</header>
 
-<%= link_to 'Back', bookings_path %>
+<section class="card form-card">
+  <div class="card__body card__body--padded">
+    <%= render "form", booking: @booking %>
+  </div>
+</section>
+
+<div class="btn-row">
+  <%= link_to "Cancel", bookings_path, class: "btn btn--secondary" %>
+</div>
