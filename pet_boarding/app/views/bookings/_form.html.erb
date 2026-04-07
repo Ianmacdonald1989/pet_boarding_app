@@ -1,0 +1,58 @@
+<%= form_with(model: booking) do |form| %>
+  <% if booking.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(booking.errors.count, "error") %> prohibited this booking from being saved:</h2>
+
+      <ul>
+        <% booking.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :customer_id, "Customer" %>
+    <%= form.collection_select :customer_id, @customers, :id, :full_name, prompt: "Select a customer" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_date %>
+    <%= form.date_select :start_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_date %>
+    <%= form.date_select :end_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cage_size, "Required cage size (auto-calculated)" %>
+    <%= form.text_field :cage_size, value: booking.cage_size, disabled: true %>
+    <p style="margin: 0.25rem 0 0;">This is calculated from the pet details you enter below.</p>
+  </div>
+
+  <h3>Pet details</h3>
+  <div class="fields">
+    <%= form.fields_for :pets do |pet_fields| %>
+      <div class="field">
+        <%= pet_fields.label :pet_type, "Pet type" %>
+        <%= pet_fields.text_field :pet_type, placeholder: "guinea pig, dog, cat, hamster" %>
+      </div>
+
+      <div class="field">
+        <%= pet_fields.label :pet_size, "Pet size (needed for dogs)" %>
+        <%= pet_fields.text_field :pet_size, placeholder: "large" %>
+      </div>
+
+      <div class="field">
+        <%= pet_fields.label :quantity, "Quantity" %>
+        <%= pet_fields.number_field :quantity, min: 1 %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

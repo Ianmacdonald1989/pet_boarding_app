@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Bookings</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Customer</th>
+      <th>Start date</th>
+      <th>End date</th>
+      <th>Required cage</th>
+      <th>Pet(s)</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @bookings.each do |booking| %>
+      <tr>
+        <td><%= booking.customer&.full_name || booking.customer_id %></td>
+        <td><%= booking.start_date %></td>
+        <td><%= booking.end_date %></td>
+        <td><%= booking.cage_size %></td>
+        <td>
+          <%= booking.pets.map { |p| "#{p.quantity}x #{p.pet_type}#{p.pet_size.present? ? ' (' + p.pet_size.to_s + ')' : ''}" }.join(", ") %>
+        </td>
+        <td><%= link_to 'Show', booking %></td>
+        <td><%= link_to 'Edit', edit_booking_path(booking) %></td>
+        <td><%= link_to 'Destroy', booking, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Booking', new_booking_path %>

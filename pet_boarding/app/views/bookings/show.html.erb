@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Customer:</strong>
+  <%= @booking.customer&.full_name || @booking.customer_id %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @booking.start_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @booking.end_date %>
+</p>
+
+<p>
+  <strong>Required cage:</strong>
+  <%= @booking.cage_size %>
+</p>
+
+<p>
+  <strong>Pet(s):</strong>
+  <%= @booking.pets.map { |p| "#{p.quantity}x #{p.pet_type}#{p.pet_size.present? ? ' (' + p.pet_size.to_s + ')' : ''}" }.join(", ") %>
+</p>
+
+<%= link_to 'Edit', edit_booking_path(@booking) %> |
+<%= link_to 'Back', bookings_path %>

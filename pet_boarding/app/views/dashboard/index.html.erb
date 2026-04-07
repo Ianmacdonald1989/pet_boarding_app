@@ -1,0 +1,59 @@
+<h1>Pet Boarding Dashboard</h1>
+<p>
+  Today: <strong><%= @today %></strong>
+</p>
+
+<h2>Cage usage</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Size</th>
+      <th>Total cages</th>
+      <th>Bookings today</th>
+      <th>Available</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cage_usage_rows.each do |row| %>
+      <tr>
+        <td><%= row[:size] %></td>
+        <td><%= row[:total] %></td>
+        <td><%= row[:booked] %></td>
+        <td><%= row[:available] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>Current bookings</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Customer</th>
+      <th>Dates</th>
+      <th>Required cage</th>
+      <th>Pet(s)</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @current_bookings.each do |booking| %>
+      <tr>
+        <td><%= booking.customer&.full_name || booking.customer_id %></td>
+        <td><%= booking.start_date %> to <%= booking.end_date %></td>
+        <td><%= booking.cage_size %></td>
+        <td>
+          <%= booking.pets.map { |p| "#{p.quantity}x #{p.pet_type}#{p.pet_size.present? ? ' (' + p.pet_size.to_s + ')' : ''}" }.join(", ") %>
+        </td>
+        <td><%= link_to "Show", booking %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p>
+  <%= link_to "Create a booking", new_booking_path %>
+</p>
+

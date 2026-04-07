@@ -1,0 +1,43 @@
+# See https://help.github.com/articles/ignoring-files for more about ignoring files.
+
+# Bundler
+/.bundle
+/vendor/bundle
+
+# Rails
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/storage/*
+!/storage/.keep
+/public/assets
+.byebug_history
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+
+# Environment
+.env
+.env.*
+
+# Webpacker / Node
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.npm
+/public/packs
+/public/packs-test
+
+# Ignore precompiled packs (optional: commit manifest + packs for deploy)
+# /public/packs
+
+# IDE
+/.idea
+/.vscode
+*.swp
+*.swo
+.DS_Store
+
+# Coverage
+/coverage
