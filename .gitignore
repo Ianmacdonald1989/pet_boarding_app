@@ -1,0 +1,5 @@
+# Repo-level ignores (Rails app lives in `pet_boarding/`)
+
+# Prevent accidentally creating/committing a nested Rails app repo
+/pet_boarding/pet_boarding/
+
