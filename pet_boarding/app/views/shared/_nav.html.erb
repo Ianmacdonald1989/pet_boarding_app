@@ -10,6 +10,8 @@
       <%= link_to "Dashboard", root_path, class: (path == "/" || path == "/dashboard") ? "is-active" : nil %>
       <%= link_to "All bookings", bookings_path, class: path.start_with?("/bookings") && path == "/bookings" ? "is-active" : nil %>
       <%= link_to "New booking", new_booking_path, class: path == "/bookings/new" ? "is-active" : nil %>
+      <%= link_to "Customers", customers_path, class: path.start_with?("/customers") ? "is-active" : nil %>
+      <%= link_to "Inventory", inventory_path, class: path.start_with?("/inventory") ? "is-active" : nil %>
     </nav>
   </div>
 </header>

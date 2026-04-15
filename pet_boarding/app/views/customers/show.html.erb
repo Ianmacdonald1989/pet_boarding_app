@@ -1,0 +1,32 @@
+<% content_for :title, "#{@customer.full_name} — Pet Boarding" %>
+
+<header class="page-header">
+  <h1><%= @customer.full_name %></h1>
+  <p class="page-header__meta">Customer profile.</p>
+</header>
+
+<section class="card">
+  <div class="card__body card__body--padded">
+    <ul class="detail-list">
+      <li>
+        <span class="detail-label">Email</span>
+        <span class="detail-value"><%= @customer.email %></span>
+      </li>
+      <li>
+        <span class="detail-label">Phone</span>
+        <span class="detail-value"><%= @customer.phone.presence || "—" %></span>
+      </li>
+      <li>
+        <span class="detail-label">Bookings</span>
+        <span class="detail-value"><%= @customer.bookings.count %></span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<div class="btn-row">
+  <%= link_to "New booking", new_booking_path(booking: { customer_id: @customer.id }), class: "btn btn--primary" %>
+  <%= link_to "Edit customer", edit_customer_path(@customer), class: "btn btn--secondary" %>
+  <%= link_to "All customers", customers_path, class: "btn btn--ghost" %>
+</div>
+

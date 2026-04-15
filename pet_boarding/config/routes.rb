@@ -3,5 +3,9 @@ Rails.application.routes.draw do
   get "/dashboard", to: "dashboard#index"
 
   resources :bookings
+  resources :customers
+
+  get "/inventory", to: "inventory#edit"
+  patch "/inventory", to: "inventory#update"
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

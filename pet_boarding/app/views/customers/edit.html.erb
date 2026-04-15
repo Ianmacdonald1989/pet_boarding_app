@@ -1,0 +1,18 @@
+<% content_for :title, "Edit customer — Pet Boarding" %>
+
+<header class="page-header">
+  <h1>Edit customer</h1>
+  <p class="page-header__meta">Update contact details.</p>
+</header>
+
+<section class="card form-card">
+  <div class="card__body card__body--padded">
+    <%= render "form", customer: @customer, return_to: @return_to %>
+  </div>
+</section>
+
+<div class="btn-row">
+  <%= link_to "Back to customers", customers_path, class: "btn btn--secondary" %>
+  <%= link_to "View customer", @customer, class: "btn btn--ghost" %>
+</div>
+

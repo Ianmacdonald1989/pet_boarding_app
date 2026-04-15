@@ -1,0 +1,42 @@
+<%= form_with(model: customer) do |form| %>
+  <% if customer.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(customer.errors.count, "issue") %> to fix before saving</h2>
+      <ul>
+        <% customer.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :first_name, class: "form-label" %>
+    <%= form.text_field :first_name, class: "form-input", autocomplete: "given-name" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :last_name, class: "form-label" %>
+    <%= form.text_field :last_name, class: "form-input", autocomplete: "family-name" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :email, class: "form-label" %>
+    <%= form.email_field :email, class: "form-input", autocomplete: "email" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :phone, class: "form-label" %>
+    <%= form.telephone_field :phone, class: "form-input", autocomplete: "tel" %>
+    <p class="form-hint">Optional.</p>
+  </div>
+
+  <% if local_assigns[:return_to].present? %>
+    <%= hidden_field_tag :return_to, return_to %>
+  <% end %>
+
+  <div class="form-actions">
+    <%= form.submit customer.persisted? ? "Save customer" : "Create customer" %>
+  </div>
+<% end %>
+

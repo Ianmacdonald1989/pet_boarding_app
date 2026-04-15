@@ -1,0 +1,49 @@
+<% content_for :title, "Customers — Pet Boarding" %>
+
+<header class="page-header">
+  <h1>Customers</h1>
+  <p class="page-header__meta">Create and manage booking customers.</p>
+</header>
+
+<section class="card">
+  <div class="card__header">
+    <h2 class="card__title">All customers</h2>
+    <%= link_to "New customer", new_customer_path, class: "btn btn--primary" %>
+  </div>
+  <div class="card__body">
+    <% if @customers.any? %>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Phone</th>
+              <th scope="col" class="actions-cell">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @customers.each do |customer| %>
+              <tr>
+                <td><%= customer.full_name %></td>
+                <td><%= customer.email %></td>
+                <td><%= customer.phone.presence || "—" %></td>
+                <td class="actions-cell">
+                  <%= link_to "View", customer, class: "btn btn--ghost" %>
+                  <%= link_to "Edit", edit_customer_path(customer), class: "btn btn--ghost" %>
+                  <%= link_to "Delete", customer, method: :delete, data: { confirm: "Delete this customer? This will also delete their bookings." }, class: "btn btn--danger" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <p>No customers yet. Create one to start making bookings.</p>
+        <%= link_to "New customer", new_customer_path, class: "btn btn--primary" %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
