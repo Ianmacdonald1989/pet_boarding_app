@@ -4,6 +4,8 @@ class Booking < ApplicationRecord
   belongs_to :cage, foreign_key: :cage_size, primary_key: :size, optional: true
   has_many :pets, dependent: :destroy
   accepts_nested_attributes_for :pets, allow_destroy: true
+  has_many :booking_extras, dependent: :destroy
+  accepts_nested_attributes_for :booking_extras, allow_destroy: true, reject_if: :all_blank
 
   enum cage_size: { small: 'small', medium: 'medium', large: 'large' }
 
@@ -11,9 +13,13 @@ class Booking < ApplicationRecord
   CAGE_ORDER = { 'small' => 0, 'medium' => 1, 'large' => 2 }.freeze
 
   before_validation :set_cage_size
+  before_validation :sync_currency
+  before_save :recalculate_total_cents
 
   validates :customer_id, :start_date, :end_date, presence: true
   validates :cage_size, presence: true
+  validates :total_cents, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :currency, presence: true
   validates_associated :pets
   validate :start_date_is_not_after_end_date
   validate :must_have_pets
@@ -31,6 +37,29 @@ class Booking < ApplicationRecord
     return nil if required_sizes.any?(&:nil?)
 
     required_sizes.max_by { |size| CAGE_ORDER.fetch(size) }
+  end
+
+  def nights
+    return 0 if start_date.blank? || end_date.blank?
+    return 0 if end_date < start_date
+
+    (end_date - start_date).to_i + 1
+  end
+
+  def nightly_rate_cents
+    Cage.find_by(size: cage_size)&.nightly_rate_cents.to_i
+  end
+
+  def base_cost_cents
+    nights * nightly_rate_cents
+  end
+
+  def extras_total_cents
+    booking_extras.sum { |e| e.line_total_cents }
+  end
+
+  def recalculate_total_cents
+    self.total_cents = base_cost_cents + extras_total_cents
   end
 
   private
@@ -62,6 +91,12 @@ class Booking < ApplicationRecord
 
   def set_cage_size
     self.cage_size = calculate_required_cage_size
+  end
+
+  def sync_currency
+    cage_currency = Cage.find_by(size: cage_size)&.currency
+    self.currency = cage_currency.presence || currency.presence || "USD"
+    booking_extras.each { |e| e.currency = currency if e.currency.blank? }
   end
 
   def must_have_pets

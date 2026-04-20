@@ -15,4 +15,17 @@ module ApplicationHelper
       parts.join(" ")
     end.join(", ")
   end
+
+  def money(cents, currency: "USD")
+    amount = cents.to_i / 100.0
+    unit =
+      case currency.to_s
+      when "USD" then "$"
+      when "GBP" then "£"
+      when "EUR" then "€"
+      else "#{currency} "
+      end
+
+    "#{unit}#{format('%.2f', amount)}"
+  end
 end

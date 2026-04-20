@@ -7,4 +7,6 @@ class Cage < ApplicationRecord
 
   validates :size, presence: true
   validates :total_units, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :nightly_rate_cents, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :currency, presence: true
 end

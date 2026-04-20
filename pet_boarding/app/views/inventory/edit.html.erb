@@ -10,17 +10,27 @@
     <%= form_with url: inventory_path, method: :patch do |f| %>
       <div class="form-group">
         <%= label_tag "inventory_small", "Small cages", class: "form-label" %>
-        <%= number_field_tag "inventory[small]", @cages_by_size.fetch("small").total_units, min: 0, class: "form-input" %>
+        <div class="btn-row" style="margin-top: 0;">
+          <%= number_field_tag "inventory[small][total_units]", @cages_by_size.fetch("small").total_units, min: 0, class: "form-input", style: "max-width: 10rem;" %>
+          <%= number_field_tag "inventory[small][nightly_rate_cents]", @cages_by_size.fetch("small").nightly_rate_cents, min: 0, class: "form-input", style: "max-width: 14rem;", placeholder: "Nightly rate (cents)" %>
+        </div>
+        <p class="form-hint">Nightly rate is stored in cents (e.g. 4500 = $45.00).</p>
       </div>
 
       <div class="form-group">
         <%= label_tag "inventory_medium", "Medium cages", class: "form-label" %>
-        <%= number_field_tag "inventory[medium]", @cages_by_size.fetch("medium").total_units, min: 0, class: "form-input" %>
+        <div class="btn-row" style="margin-top: 0;">
+          <%= number_field_tag "inventory[medium][total_units]", @cages_by_size.fetch("medium").total_units, min: 0, class: "form-input", style: "max-width: 10rem;" %>
+          <%= number_field_tag "inventory[medium][nightly_rate_cents]", @cages_by_size.fetch("medium").nightly_rate_cents, min: 0, class: "form-input", style: "max-width: 14rem;", placeholder: "Nightly rate (cents)" %>
+        </div>
       </div>
 
       <div class="form-group">
         <%= label_tag "inventory_large", "Large cages", class: "form-label" %>
-        <%= number_field_tag "inventory[large]", @cages_by_size.fetch("large").total_units, min: 0, class: "form-input" %>
+        <div class="btn-row" style="margin-top: 0;">
+          <%= number_field_tag "inventory[large][total_units]", @cages_by_size.fetch("large").total_units, min: 0, class: "form-input", style: "max-width: 10rem;" %>
+          <%= number_field_tag "inventory[large][nightly_rate_cents]", @cages_by_size.fetch("large").nightly_rate_cents, min: 0, class: "form-input", style: "max-width: 14rem;", placeholder: "Nightly rate (cents)" %>
+        </div>
       </div>
 
       <div class="form-actions">

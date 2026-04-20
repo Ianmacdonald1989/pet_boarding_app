@@ -15,8 +15,11 @@ class InventoryController < ApplicationController
       SIZES.each do |size|
         next unless updates.key?(size)
 
-        total_units = Integer(updates.fetch(size))
-        Cage.find_by!(size: size).update!(total_units: total_units)
+        value = updates.fetch(size)
+        total_units = Integer(value.fetch("total_units"))
+        nightly_rate_cents = Integer(value.fetch("nightly_rate_cents"))
+
+        Cage.find_by!(size: size).update!(total_units: total_units, nightly_rate_cents: nightly_rate_cents)
       rescue ArgumentError, TypeError
         raise ActiveRecord::RecordInvalid.new(Cage.new), "Invalid number for #{size}"
       end
@@ -41,7 +44,11 @@ class InventoryController < ApplicationController
   end
 
   def inventory_params
-    params.fetch(:inventory, {}).permit(*SIZES)
+    params.fetch(:inventory, {}).permit(
+      small: %i[total_units nightly_rate_cents],
+      medium: %i[total_units nightly_rate_cents],
+      large: %i[total_units nightly_rate_cents]
+    )
   end
 end
 

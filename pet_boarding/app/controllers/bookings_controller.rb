@@ -11,15 +11,22 @@ class BookingsController < ApplicationController
   def show
   end
 
+  def invoice
+    @booking = Booking.includes(:customer, :pets, :booking_extras).find(params[:id])
+    render layout: "invoice"
+  end
+
   # GET /bookings/new
   def new
     @booking = Booking.new
     @booking.pets.build
+    @booking.booking_extras.build
   end
 
   # GET /bookings/1/edit
   def edit
     @booking.pets.build if @booking.pets.empty?
+    @booking.booking_extras.build if @booking.booking_extras.empty?
   end
 
   # POST /bookings or /bookings.json
@@ -33,6 +40,7 @@ class BookingsController < ApplicationController
       else
         # If validation fails with no nested pets, show at least one pet row.
         @booking.pets.build if @booking.pets.empty?
+        @booking.booking_extras.build if @booking.booking_extras.empty?
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @booking.errors, status: :unprocessable_entity }
       end
@@ -47,6 +55,7 @@ class BookingsController < ApplicationController
         format.json { render :show, status: :ok, location: @booking }
       else
         @booking.pets.build if @booking.pets.empty?
+        @booking.booking_extras.build if @booking.booking_extras.empty?
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @booking.errors, status: :unprocessable_entity }
       end
@@ -75,7 +84,8 @@ class BookingsController < ApplicationController
         :customer_id,
         :start_date,
         :end_date,
-        pets_attributes: %i[id pet_type pet_size quantity _destroy]
+        pets_attributes: %i[id pet_type pet_size quantity _destroy],
+        booking_extras_attributes: %i[id description quantity unit_price_cents _destroy]
       )
     end
 

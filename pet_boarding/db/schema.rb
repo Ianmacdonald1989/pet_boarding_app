@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_02_153057) do
+ActiveRecord::Schema.define(version: 2026_04_08_120010) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "booking_extras", force: :cascade do |t|
+    t.bigint "booking_id", null: false
+    t.string "description", null: false
+    t.integer "quantity", default: 1, null: false
+    t.integer "unit_price_cents", default: 0, null: false
+    t.string "currency", default: "USD", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["booking_id"], name: "index_booking_extras_on_booking_id"
+  end
 
   create_table "bookings", force: :cascade do |t|
     t.bigint "customer_id", null: false
@@ -22,6 +33,8 @@ ActiveRecord::Schema.define(version: 2026_04_02_153057) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "cage_size"
+    t.integer "total_cents", default: 0, null: false
+    t.string "currency", default: "USD", null: false
     t.index ["cage_size"], name: "index_bookings_on_cage_size"
     t.index ["customer_id"], name: "index_bookings_on_customer_id"
   end
@@ -31,6 +44,8 @@ ActiveRecord::Schema.define(version: 2026_04_02_153057) do
     t.integer "total_units", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "nightly_rate_cents", default: 0, null: false
+    t.string "currency", default: "USD", null: false
   end
 
   create_table "customers", force: :cascade do |t|
@@ -52,5 +67,6 @@ ActiveRecord::Schema.define(version: 2026_04_02_153057) do
     t.index ["booking_id"], name: "index_pets_on_booking_id"
   end
 
+  add_foreign_key "booking_extras", "bookings"
   add_foreign_key "bookings", "customers"
 end

@@ -24,12 +24,17 @@
         <span class="detail-label">Pets</span>
         <span class="detail-value"><%= pets_summary(@booking) %></span>
       </li>
+      <li>
+        <span class="detail-label">Total</span>
+        <span class="detail-value"><strong><%= money(@booking.total_cents, currency: @booking.currency) %></strong></span>
+      </li>
     </ul>
   </div>
 </section>
 
 <div class="btn-row">
   <%= link_to "Edit booking", edit_booking_path(@booking), class: "btn btn--primary" %>
+  <%= link_to "Invoice", invoice_booking_path(@booking), class: "btn btn--secondary" %>
   <%= link_to "All bookings", bookings_path, class: "btn btn--secondary" %>
   <%= link_to "Dashboard", root_path, class: "btn btn--ghost" %>
 </div>

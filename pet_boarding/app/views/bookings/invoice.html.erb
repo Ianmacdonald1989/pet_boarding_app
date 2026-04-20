@@ -1,0 +1,59 @@
+<div class="invoice-header">
+  <div>
+    <h1 class="invoice-title">Invoice</h1>
+    <div class="invoice-meta">
+      Booking <strong>#<%= @booking.id %></strong><br>
+      Customer: <strong><%= @booking.customer.full_name %></strong><br>
+      Stay: <strong><%= l @booking.start_date %> — <%= l @booking.end_date %></strong> (<%= @booking.nights %> night<%= "s" unless @booking.nights == 1 %>)<br>
+      Cage: <strong><%= @booking.cage_size %></strong>
+    </div>
+  </div>
+
+  <div class="invoice-actions">
+    <%= link_to "Back", booking_path(@booking), class: "btn btn--secondary" %>
+    <%= link_to "Print", "#", class: "btn btn--primary", onclick: "window.print(); return false;" %>
+  </div>
+</div>
+
+<section class="card">
+  <div class="card__header">
+    <h2 class="card__title">Charges</h2>
+  </div>
+  <div class="card__body">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Qty</th>
+            <th scope="col">Unit</th>
+            <th scope="col">Line total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Boarding (<%= @booking.cage_size %>)</td>
+            <td><%= @booking.nights %></td>
+            <td><%= money(@booking.nightly_rate_cents, currency: @booking.currency) %> / night</td>
+            <td><strong><%= money(@booking.base_cost_cents, currency: @booking.currency) %></strong></td>
+          </tr>
+          <% @booking.booking_extras.each do |extra| %>
+            <tr>
+              <td><%= extra.description %></td>
+              <td><%= extra.quantity %></td>
+              <td><%= money(extra.unit_price_cents, currency: @booking.currency) %></td>
+              <td><strong><%= money(extra.line_total_cents, currency: @booking.currency) %></strong></td>
+            </tr>
+          <% end %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" style="text-align:right;"><strong>Total</strong></td>
+            <td><strong><%= money(@booking.total_cents, currency: @booking.currency) %></strong></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</section>
+

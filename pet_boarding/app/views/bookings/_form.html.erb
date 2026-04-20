@@ -78,6 +78,28 @@
     </div>
   <% end %>
 
+  <h3 class="form-section-title">Extras (optional)</h3>
+
+  <%= form.fields_for :booking_extras do |extra_fields| %>
+    <div class="pet-card">
+      <div class="pet-card__inner">
+        <div class="form-group">
+          <%= extra_fields.label :description, class: "form-label" %>
+          <%= extra_fields.text_field :description, class: "form-input", placeholder: "e.g. Medication administration" %>
+        </div>
+        <div class="form-group">
+          <%= extra_fields.label :quantity, class: "form-label" %>
+          <%= extra_fields.number_field :quantity, min: 1, class: "form-input" %>
+        </div>
+        <div class="form-group">
+          <%= extra_fields.label :unit_price_cents, "Unit price (cents)", class: "form-label" %>
+          <%= extra_fields.number_field :unit_price_cents, min: 0, class: "form-input" %>
+          <p class="form-hint">Example: 1500 = $15.00</p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
   <div class="form-actions">
     <%= form.submit booking.persisted? ? "Save changes" : "Create booking", class: nil %>
   </div>

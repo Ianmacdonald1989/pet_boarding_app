@@ -2,7 +2,11 @@ Rails.application.routes.draw do
   root "dashboard#index"
   get "/dashboard", to: "dashboard#index"
 
-  resources :bookings
+  resources :bookings do
+    member do
+      get :invoice
+    end
+  end
   resources :customers
 
   get "/inventory", to: "inventory#edit"

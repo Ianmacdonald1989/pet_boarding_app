@@ -2,12 +2,13 @@ today = Date.current
 
 # Seed a basic cage inventory so availability checks work.
 [
-  { size: 'small', total_units: 10 },
-  { size: 'medium', total_units: 10 },
-  { size: 'large', total_units: 10 }
+  { size: 'small', total_units: 10, nightly_rate_cents: 3500 },
+  { size: 'medium', total_units: 10, nightly_rate_cents: 4500 },
+  { size: 'large', total_units: 10, nightly_rate_cents: 6000 }
 ].each do |attrs|
   Cage.find_or_initialize_by(size: attrs[:size]).tap do |cage|
     cage.total_units = attrs[:total_units]
+    cage.nightly_rate_cents = attrs[:nightly_rate_cents]
     cage.save!
   end
 end
